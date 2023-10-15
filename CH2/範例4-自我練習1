@@ -1,0 +1,36 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace ch2_S4_P1
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (Char.IsLetterOrDigit(e.KeyChar) ||  //偵測是否為十進位數字與英文
+                Char.IsControl(e.KeyChar))          //偵測是否為控制按鍵
+            {
+                if (Char.IsLower(e.KeyChar))
+                    e.KeyChar = Char.ToUpper(e.KeyChar);  //將英文小寫轉換為大寫
+
+                e.Handled = false;
+            }
+            else
+            {
+                e.Handled = true;
+            }
+        }
+    }
+}
