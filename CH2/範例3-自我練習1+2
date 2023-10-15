@@ -1,0 +1,49 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace ch2_S3_P1
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        int horizonMove = 10;
+        int verticalMove = 10;
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            //偵測球是否超過左右邊欄
+            if (ovalShape1.Left + horizonMove <= 0 ||
+                ovalShape1.Left + ovalShape1.Width + horizonMove >= ClientSize.Width)
+                horizonMove = -horizonMove;
+            //偵測球是否超過上下邊欄
+            if (ovalShape1.Top + verticalMove <= 0 ||
+                ovalShape1.Top + ovalShape1.Height + verticalMove >= ClientSize.Height)
+                verticalMove = -verticalMove;
+
+            ovalShape1.Left += horizonMove;
+            ovalShape1.Top += verticalMove;
+        }
+
+        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter) //當按下Enter時
+            {
+                if (timer1.Enabled)
+                    timer1.Stop(); //停止計時器，球暫停移動
+                else
+                    timer1.Start(); //啟動計時器，球開始移動
+            }
+        }
+    }
+}
