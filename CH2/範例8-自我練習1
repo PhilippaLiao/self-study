@@ -1,0 +1,64 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace ch2_S8_P1
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        {
+            string keycode = e.KeyCode.ToString(); //獲取鍵盤代碼
+            int move = 10; //移動量
+            int labelLeft, labelRight, labelTop, labelBottom;
+            //label的上下左右座標
+            labelLeft = label1.Location.X;
+            labelRight = label1.Location.X + label1.Width;
+            labelTop = label1.Location.Y;
+            labelBottom = label1.Location.Y + label1.Height;
+
+            switch (keycode)
+            {
+                case "Up":
+                    if (labelTop - 0 <= move) //如果label和視窗邊界<=移動量
+                        labelTop = 0; //讓label貼齊視窗
+                    else
+                        labelTop -= move;
+                    break;
+                case "Down":
+                    if (this.ClientSize.Height - labelBottom <= move)
+                        labelTop = this.ClientSize.Height - label1.Height; //可見視窗的高度-label的高度
+                    else
+                        labelTop += move;
+                    break;
+                case "Left":
+                    if (labelLeft - 0 <= move)
+                        labelLeft = 0;
+                    else
+                        labelLeft -= move;
+                    break;
+                case "Right":
+                    if (this.ClientSize.Width - labelRight <= move)
+                        labelLeft = this.ClientSize.Width - label1.Width;
+                    else
+                        labelLeft += move;
+                    break;
+
+                //說明：決定label位置的是左上角的座標，所以要變更的只有labelTop和labelLeft。
+            }
+
+            label1.Location = new Point(labelLeft, labelTop); //更新位置
+        }
+    }
+}
