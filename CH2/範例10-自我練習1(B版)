@@ -1,0 +1,191 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace ch2_S10_P1b
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            //初始化
+            checkBox1.Checked = false;
+            checkBox2.Checked = false;
+            checkBox3.Checked = false;
+            checkBox4.Checked = false;
+            checkBox5.Checked = false;
+            textBox1.Visible = false;
+            textBox2.Visible = false;
+            textBox3.Visible = false;
+            textBox4.Visible = false;
+            textBox5.Visible = false;
+            textBox1.Text = "0";
+            textBox2.Text = "0";
+            textBox3.Text = "0";
+            textBox4.Text = "0";
+            textBox5.Text = "0";
+            label1.Visible = false;
+            label2.Visible = false;
+            label3.Visible = false;
+            label4.Visible = false;
+            label5.Visible = false;
+            label6.Text = "";
+        }
+
+        //===================點選checkBox才會顯現輸入欄===================
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox1.Checked == true)
+            {
+                textBox1.Visible = true;
+                label1.Visible = true;
+                textBox1.Text = "1";
+            }
+            else
+            {
+                textBox1.Visible = false;
+                label1.Visible = false;
+                textBox1.Text = "0";
+            }
+        }
+
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox2.Checked == true)
+            {
+                textBox2.Visible = true;
+                label2.Visible = true;
+                textBox2.Text = "1";
+            }
+            else
+            {
+                textBox2.Visible = false;
+                label2.Visible = false;
+                textBox2.Text = "0";
+            }
+        }
+
+        private void checkBox3_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox3.Checked == true)
+            {
+                textBox3.Visible = true;
+                label3.Visible = true;
+                textBox3.Text = "1";
+            }
+            else
+            {
+                textBox3.Visible = false;
+                label3.Visible = false;
+                textBox3.Text = "0";
+            }
+        }
+
+        private void checkBox4_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox4.Checked == true)
+            {
+                textBox4.Visible = true;
+                label4.Visible = true;
+                textBox4.Text = "1";
+            }
+            else
+            {
+                textBox4.Visible = false;
+                label4.Visible = false;
+                textBox4.Text = "0";
+            }
+        }
+
+        private void checkBox5_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox5.Checked == true)
+            {
+                textBox5.Visible = true;
+                label5.Visible = true;
+                textBox5.Text = "1";
+            }
+            else
+            {
+                textBox5.Visible = false;
+                label5.Visible = false;
+                textBox5.Text = "0";
+            }
+        }
+
+        //===================開始計算票價===================
+        private void button2_Click(object sender, EventArgs e)
+        {
+            label6.Text = ""; //刷新最後顯示的票價內容
+
+            //判斷輸入是否為正整數，並計算三種票的人數
+            int member1, member2, member3, member4, member5;
+            int regular = 0, concession = 0, free = 0;
+            bool success = int.TryParse(textBox1.Text, out member1);
+            if (success == false || member1 < 0)
+            {
+                MessageBox.Show("請填入正確人數");
+                return;
+            }
+            else {regular += member1;}
+            success = int.TryParse(textBox2.Text, out member2);
+            if (success == false || member2 < 0)
+            {
+                MessageBox.Show("請填入正確人數");
+                return;
+            }
+            else {concession += member2;}
+            success = int.TryParse(textBox3.Text, out member3);
+            if (success == false || member3 < 0)
+            {
+                MessageBox.Show("請填入正確人數");
+                return;
+            }
+            else {free += member3;}
+            success = int.TryParse(textBox4.Text, out member4);
+            if (success == false || member4 < 0)
+            {
+                MessageBox.Show("請填入正確人數");
+                return;
+            }
+            else {free += member4;}
+            success = int.TryParse(textBox5.Text, out member5);
+            if (success == false || member5 < 0)
+            {
+                MessageBox.Show("請填入正確人數");
+                return;
+            }
+            else {free += member5;}
+
+            //判斷是否有符合團體折扣，並計算出總金額
+            int totalPrice = 0;
+            if (regular + concession + free >= 30) //購入票數>=30，打七折
+                totalPrice = (regular * 60 + concession * 30) * 7 / 10;
+            else
+                totalPrice = (regular * 60 + concession * 30);
+
+            //===================顯示票價計算結果===================
+            if (regular > 0)
+                label6.Text += ("全票 " + regular + "張 * 60元 = " + regular * 60 + "元\n");
+            if (concession > 0)
+                label6.Text += ("優待票 " + concession + "張 * 30元 = " + concession * 30 + "元\n");
+            if (free > 0)
+                label6.Text += ("免費票 " + free + "張" + "\n");
+            if (regular + concession + free >= 30)
+                label6.Text += ("達30人以上，享有團體票七折優待" + "\n");
+            if (regular + concession + free != 0)
+                label6.Text += ("總計 " + totalPrice + "元");
+        }
+    }
+}
