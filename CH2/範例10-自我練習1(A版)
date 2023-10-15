@@ -1,0 +1,58 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace ch2_S10_P1a
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            textBox1.Text = "";
+            textBox2.Text = "";
+            textBox3.Text = "";
+            label13.Text = "0元";
+            return;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            int regular = 0, concession = 0, free = 0;
+            if (int.TryParse(textBox1.Text, out regular) &&
+                int.TryParse(textBox2.Text, out concession) &&
+                int.TryParse(textBox3.Text, out free))
+            {
+                if (regular < 0 || concession < 0 || free < 0)
+                {
+                    MessageBox.Show("請輸入正確人數");
+                    return;
+                }
+            }
+            else
+            {
+                MessageBox.Show("請輸入正確人數");
+                return;
+            }
+
+            decimal price = 0; //型別設為decimal，確保計算結果的準確性
+
+            if (regular + concession + free >= 30)
+                price = (regular * 60 + concession * 30) * 0.7m; //記得後綴m
+            else
+                price = (regular * 60 + concession * 30) * 1m;
+
+            label13.Text = (price + " 元");
+        }
+    }
+}
