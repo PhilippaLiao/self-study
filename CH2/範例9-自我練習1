@@ -1,0 +1,62 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace ch2_S9_P1
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar != 13) //若沒按Enter鍵就中止執行→按下Enter後才會繼續執行以下程式碼
+                return;
+
+            int score;
+            if (int.TryParse(textBox1.Text, out score)) //判定為有效整數
+            {
+                string level = ""; //初始化為空字串
+                if (score >= 90 && score <= 100)
+                    level = "A";
+                else if (score >= 80 && score <= 89)
+                    level = "B";
+                else if (score >= 70 && score <= 79)
+                    level = "C";
+                else if (score >= 60 && score <= 69)
+                    level = "D";
+                else if (score >= 0 && score <= 59)
+                    level = "E";
+                else
+                    MessageBox.Show("請輸入有效成績"); //大於100或小於0的情形
+                    textBox1.Text = "";
+
+                switch (level)
+                {
+                    case "A":
+                    case "B":
+                    case "C":
+                    case "D":
+                    case "E":
+                        label3.Text = level;
+                        break;
+                }
+            }
+            else //如果判定為非整數
+            {
+                MessageBox.Show("請輸入有效成績");
+                textBox1.Text = "";
+                return; //建議使用return來終止，避免不必要的程式碼執行
+            }
+        }
+    }
+}
