@@ -1,0 +1,142 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace ch2_S10_P2
+{
+    public partial class Form1 : Form
+    {
+        int rounds = 0;
+        int playerWin = 0, autoWin = 0;
+        int playerTotalWin = 0, autoTotalWin = 0;
+        Random rd = new Random();
+
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            //雙方數值設置
+            int playerNumber, playerGuess, autoNumber, autoGuess;
+            if (comboBox1.SelectedItem == null || comboBox2.SelectedItem == null)
+            {
+                MessageBox.Show("請選擇數字！");
+                return;
+            }
+
+            playerNumber = Convert.ToInt32(comboBox1.SelectedItem);
+            playerGuess = Convert.ToInt32(comboBox2.SelectedItem);
+            autoNumber = rd.Next(1, 5);
+            autoGuess = rd.Next(1, 5);
+
+            //顯示玩家猜測結果
+            textBox1.AppendText("玩家猜" + playerGuess.ToString() + "  ");
+            textBox1.AppendText("電腦數字為" + autoNumber.ToString() + "\r\n");
+
+            bool playerGuessResult, autoGuessResult;
+            playerGuessResult = false;
+            autoGuessResult = false;
+
+            if (playerGuess == autoNumber)
+                playerGuessResult = true;
+            switch (playerGuessResult)
+            {
+                case (true):
+                    playerWin += 1;
+                    textBox1.AppendText("→玩家猜中" + "\r\n");
+                    break;
+                case (false):
+                    textBox1.AppendText("→玩家猜錯" + "\r\n");
+                    break;
+            }
+
+            //顯示電腦猜測結果
+            textBox1.AppendText("電腦猜" + autoGuess.ToString() + "  ");
+            textBox1.AppendText("玩家數字為" + playerNumber.ToString() + "\r\n");
+            
+            if (autoGuess == playerNumber)
+                autoGuessResult = true;
+            switch (autoGuessResult)
+            {
+                case (true):
+                    autoWin += 1;
+                    textBox1.AppendText("→電腦猜中" + "\r\n");
+                    break;
+                case (false):
+                    textBox1.AppendText("→電腦猜錯" + "\r\n");
+                    break;
+            }
+
+            //顯示本局結果
+            rounds += 1;
+            string winRounds = "";
+            if (playerWin == autoWin)
+                winRounds = "平手";
+            if (playerWin < autoWin)
+            {
+                winRounds = "電腦 勝";
+                autoTotalWin += 1;
+            }
+            if (playerWin > autoWin)
+            {
+                winRounds = "玩家 勝";
+                playerTotalWin += 1;
+            }
+                
+
+            textBox1.AppendText("本局結果：" + winRounds + "\r\n");
+            textBox1.AppendText("目前比分：" + 
+                                "玩家" + playerTotalWin + "勝，" +
+                                "電腦" + autoTotalWin + "勝" + "\r\n");
+            textBox1.AppendText("---第" + rounds + "局結束---" + "\r\n");
+
+            //初始化
+            comboBox1.SelectedIndex = -1;
+            comboBox2.SelectedIndex = -1;
+            playerWin = 0;
+            autoWin = 0;
+
+
+            //遊戲結束
+            if (playerTotalWin == 2 || autoTotalWin == 2 || rounds ==3)
+            {
+                textBox1.AppendText("【遊戲結束】");
+                
+
+                if (playerTotalWin == 2)
+                    textBox1.AppendText("玩家勝利");
+                else if (autoTotalWin == 2)
+                    textBox1.AppendText("電腦勝利");
+                else
+                    textBox1.AppendText("雙方皆未達兩勝");
+
+                playerTotalWin = 0;
+                autoTotalWin = 0;
+                rounds = 0;
+                button1.Enabled = false;
+
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            comboBox1.SelectedIndex = -1;
+            comboBox2.SelectedIndex = -1;
+            playerWin = 0;
+            autoWin = 0;
+            playerTotalWin = 0;
+            autoTotalWin = 0;
+            rounds = 0;
+            textBox1.Text = "";
+            button1.Enabled = true;
+        }
+    }
+}
