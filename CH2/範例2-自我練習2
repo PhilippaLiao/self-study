@@ -1,0 +1,37 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace ch2_S2_P2
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            int doraAmount, pirateAmount;
+            double doraPrice, piratePrice, totalPrice;
+            doraAmount = Convert.ToInt32(textBox1.Text);
+            pirateAmount = Convert.ToInt32(textBox3.Text);
+            doraPrice = Convert.ToDouble(textBox2.Text);
+            piratePrice = Convert.ToDouble(textBox4.Text);
+
+            if (pirateAmount > 5)
+                doraPrice = (doraPrice * 0.8);
+
+            totalPrice = doraAmount * doraPrice + pirateAmount * piratePrice;
+
+            label6.Text = Convert.ToString(totalPrice + " 元");
+        }
+    }
+}
