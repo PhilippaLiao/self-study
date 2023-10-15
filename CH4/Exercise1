@@ -1,0 +1,43 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace Ch4_Exercise_1
+{
+    public partial class Form1 : Form
+    {
+
+        int a = 0;  //全域變數
+        bool fg = true;
+
+        public Form1()
+        {
+            InitializeComponent();
+            label1.Text = "";
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            if (fg == true)
+            {
+                a++;
+                label1.Text = a.ToString();
+                if (a == 5)
+                    fg = false;
+            }
+            else
+            {
+                a--;
+                label1.Text = a.ToString();
+                if (a == 1)
+                    fg = true;
+            }
+        }
+    }
+}
