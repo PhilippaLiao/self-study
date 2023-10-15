@@ -1,0 +1,41 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace Ch2_Exercise_9
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        int number = 0;
+        bool add = true;
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            if (add)
+            {
+                number += 1;
+                if (number == 10)
+                    add = false;
+            }
+            else
+            {
+                number -= 1;
+                if (number == 0)
+                    add = true;
+            }
+
+            label1.Text = number.ToString();
+        }
+    }
+}
