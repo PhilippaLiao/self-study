@@ -1,0 +1,44 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace Ch2_Exercise_2
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            int clothesNumber, clothesPrice, totalPrice;
+            clothesPrice = 230;
+            totalPrice = 0;
+            double discount;
+
+            if (int.TryParse(textBox1.Text, out clothesNumber) && clothesNumber >= 0)
+            {
+                if (clothesNumber < 5)
+                    discount = 1.0;
+                else if (clothesNumber >= 5 && clothesNumber <= 10)
+                    discount = 0.9;
+                else
+                    discount = 0.8;
+
+                totalPrice = Convert.ToInt32(clothesNumber * clothesPrice * discount);
+                label3.Text = ("共購買" + clothesNumber + "件" + "\r\n" +
+                                clothesPrice + "*" + clothesNumber + "*" + discount + "=" + totalPrice + "元");
+            }
+            else
+                MessageBox.Show("請輸入正整數", "錯誤");
+        }
+    }
+}
