@@ -1,0 +1,82 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace Ch2_Exercise_7
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            //變數初始值
+            decimal distance = 0m;
+            decimal price = 70m;
+            decimal driveTime = 0m;
+            decimal speed = 0m;
+            decimal delayPrice = 0m;
+            int hour = 0;
+            int minute = 0;
+            bool IsNight = false;
+            bool IsNewyear = false;
+            decimal totalPrice = 0m;
+
+            //判定輸入欄位是否有效
+            if (!decimal.TryParse(textBox1.Text, out distance) || distance < 0 ||
+                !decimal.TryParse(textBox2.Text, out speed) || speed <= 0 ||
+                !int.TryParse(comboBox1.Text, out hour) || hour < 0 || hour > 23 ||
+                !int.TryParse(comboBox2.Text, out minute) || minute < 0 || minute > 59)
+            {
+                MessageBox.Show("請正確輸入");
+                return;
+            }
+
+            //續程計費：超過1.25公里，每0.2公里5元，未滿0.2公里的部分不計價
+            if (distance > 1.25m)
+                price += (int)((distance - 1.25m) / 0.2m) * 5;
+                //注意(int)的位置，在除以0.2之後才取整數
+
+            //計算車程耗時：距離/車速*60*60 =x秒
+            driveTime = (distance / speed) * 60m * 60m;
+
+            //延遲計價：每80秒5元，未滿80秒不計價
+            if (speed < 5)
+                delayPrice = (int)(driveTime / 80m) * 5; //只取商數，不含小數
+
+            //判斷是否為夜間時段
+            if (hour >= 23 || hour < 6)
+                IsNight = true;
+
+            //讀取是否為春節運價
+            if (radioButton1.Checked == true)
+                IsNewyear = true;
+
+            //計算總價
+            totalPrice = price + delayPrice;
+            if (IsNight)
+                totalPrice += 20m;
+            if (IsNewyear)
+                totalPrice += 20m;
+
+            MessageBox.Show("總計" + totalPrice + "元");
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            textBox1.Text = "";
+            textBox2.Text = "";
+            comboBox1.Text = "";
+            comboBox2.Text = "";
+        }
+    }
+}
