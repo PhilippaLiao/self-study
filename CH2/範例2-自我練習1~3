@@ -1,0 +1,166 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace ch2_S7_P1
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        //======================自我練習1======================
+        private void button1_Click(object sender, EventArgs e)
+        {
+            int A, B, C;
+
+            //偵測是否輸入非整數
+            try
+            {
+                A = Convert.ToInt32(textBox1.Text);
+                B = Convert.ToInt32(textBox2.Text);
+                C = Convert.ToInt32(textBox3.Text);
+            }
+            catch (FormatException)
+            {
+                MessageBox.Show("請輸入有效的整數數字");
+                return;
+            }
+
+
+            if (A > B)
+            {
+                if (B > C)
+                    label2.Text = (A + ">" + B + ">" + C);
+                else
+                {
+                    if (A > C)
+                        label2.Text = (A + ">" + C + ">" + B);
+                    else
+                        label2.Text = (C + ">" + B + ">" + A);
+                }
+            }
+            else
+            {
+                if (B < C)
+                    label2.Text = (C + ">" + B + ">" + A);
+                else
+                {
+                    if (A < C)
+                        label2.Text = (B + ">" + C + ">" + A);
+                    else
+                        label2.Text = (B + ">" + A + ">" + C);
+                }
+            }
+        }
+
+        //======================自我練習2======================
+        private void button2_Click(object sender, EventArgs e)
+        {
+            int grade;
+
+            try
+            {
+                grade = Convert.ToInt32(textBox4.Text);
+            }
+            catch (FormatException)
+            {
+                MessageBox.Show("請輸入有效的整數數字");
+                textBox4.Text = "";
+                return;
+            }
+
+            if (grade < 0 || grade > 100)
+            {
+                MessageBox.Show("分數不存在");
+                textBox4.Text = "";
+                return;
+            }
+
+            if (grade >= 90)
+                label4.Text = ("A");
+            else
+                if (grade >= 80)
+                    label4.Text = ("B");
+                else
+                    if (grade >= 70)
+                        label4.Text = ("C");
+                    else
+                        label4.Text = ("D");
+        }
+
+        //======================自我練習3======================
+        private void button3_Click(object sender, EventArgs e)
+        {
+            int chScore, mathScore, engScore, lowest;
+            double average;
+            string failed;
+
+            try
+            {
+                chScore = Convert.ToInt32(textBox5.Text);
+                mathScore = Convert.ToInt32(textBox6.Text);
+                engScore = Convert.ToInt32(textBox7.Text);
+            }
+            catch (FormatException)
+            {
+                MessageBox.Show("請輸入有效的整數數字");
+                textBox5.Text = "";
+                textBox6.Text = "";
+                textBox7.Text = "";
+                return;
+            }
+            if (chScore < 0 || chScore > 100 ||
+                mathScore < 0 || mathScore > 100 ||
+                engScore < 0 || engScore > 100)
+            {
+                MessageBox.Show("分數不存在");
+                textBox5.Text = "";
+                textBox6.Text = "";
+                textBox7.Text = "";
+                return;
+            }
+
+            //計算總平均
+            average = (chScore + mathScore + engScore) / 3.0; //其中一個要有浮點數
+            label12.Text = average.ToString("F2"); //只保留小數點後兩位
+
+            //判斷最低分
+            if (chScore < mathScore)
+            {
+                if (chScore < engScore)
+                    lowest = chScore;
+                else
+                    lowest = engScore;
+            }
+            else
+            {
+                if (mathScore < engScore)
+                    lowest = mathScore;
+                else
+                    lowest = engScore;
+            }
+            label13.Text = lowest.ToString();
+
+            //判斷不及格科目
+            failed = ""; //字串初始化
+            if (chScore < 60)
+                failed += "國語 ";
+            if (mathScore < 60)
+                failed += "數學 ";
+            if (engScore < 60)
+                failed += "英文 ";
+            if (chScore >= 60 && mathScore >= 60 && engScore >= 60)
+                failed = "無";
+            label14.Text = failed;
+        }
+    }
+}
