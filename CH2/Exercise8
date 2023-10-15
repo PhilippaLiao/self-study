@@ -1,0 +1,83 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace Ch2_Exercise_8
+{
+    public partial class Form1 : Form
+    {
+        int horizonMove = 10;
+        int verticalMove = 10;
+        int score = 0;
+
+        public Form1()
+        {
+            InitializeComponent();
+
+            //設置球的初始位置，置中靠上
+            ovalShape1.Left = (ClientSize.Width - ovalShape1.Width) / 2;
+            ovalShape1.Top = 0;
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            //偵測球是否超過左右邊欄
+            if (ovalShape1.Left + horizonMove <= 0 ||
+                ovalShape1.Left + ovalShape1.Width + horizonMove >= ClientSize.Width)
+                horizonMove = -horizonMove;
+            //偵測球是否超過上邊欄
+            if (ovalShape1.Top + verticalMove <= 0)
+                verticalMove = -verticalMove;
+
+            //偵測球是否碰到擋板
+            if (ovalShape1.Bottom >= rectangleShape1.Top &&
+                ovalShape1.Bottom <= rectangleShape1.Bottom &&
+                ovalShape1.Left + ovalShape1.Width / 2 >= rectangleShape1.Left &&
+                ovalShape1.Left + ovalShape1.Width / 2 <= rectangleShape1.Right)
+            {
+                verticalMove = -verticalMove;
+                score += 10;
+            }
+
+            //獲取新位置
+            ovalShape1.Left += horizonMove;
+            ovalShape1.Top += verticalMove;
+
+            //失去分數的情形
+            if (ovalShape1.Top > ClientSize.Height)
+            {
+                if (score != 0)
+                {
+                    score -= 10;
+                    ovalShape1.Top = 0; //重新發球
+                }
+                else
+                {
+                    timer1.Stop();
+                    MessageBox.Show("遊戲結束");
+                    this.Close();
+                }
+                
+            }
+
+            //顯示分數
+            label2.Text = score.ToString();
+        }
+
+        private void Form1_MouseMove(object sender, MouseEventArgs e)
+        {
+            //讓擋板位置跟隨滑鼠X座標
+            int baffleX = (int)e.X;
+            if (baffleX > ClientSize.Width - rectangleShape1.Width)
+                rectangleShape1.Left = ClientSize.Width - rectangleShape1.Width;
+            else
+                rectangleShape1.Left = baffleX;
+        }
+    }
+}
