@@ -1,0 +1,142 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace Chapter1Exercise
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        //=========================習題1=========================
+        private void button1_Click(object sender, EventArgs e)
+        {
+            double height, weight, BMI;
+            height = Convert.ToDouble(textBox1.Text) / 100;
+            weight = Convert.ToDouble(textBox2.Text);
+            BMI = weight / (height * height);
+            label13.Text = Convert.ToString(BMI);
+        }
+
+        //=========================習題2=========================
+        private void button3_Click(object sender, EventArgs e)
+        {
+            double num1 = Convert.ToDouble(textBox3.Text);
+            double num2 = Convert.ToDouble(textBox4.Text);
+            double add = num1 + num2;
+            double sub = num1 - num2;
+            double mul = num1 * num2;
+            double div = num1 / num2;
+            label16.Text = Convert.ToString(num1) + "+" + Convert.ToString(num2) + "=" + Convert.ToString(add);
+            label17.Text = Convert.ToString(num1) + "-" + Convert.ToString(num2) + "=" + Convert.ToString(sub);
+            label18.Text = Convert.ToString(num1) + "×" + Convert.ToString(num2) + "=" + Convert.ToString(mul);
+            label19.Text = Convert.ToString(num1) + "÷" + Convert.ToString(num2) + "=" + Convert.ToString(div);
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            string temp = textBox3.Text;
+            textBox3.Text = textBox4.Text;
+            textBox4.Text = temp;
+        }
+
+        //=========================習題3=========================
+        private void button4_Click(object sender, EventArgs e)
+        {
+            double avg1, avg2, avg3, AVG;
+            avg1 = Convert.ToDouble(textBox5.Text);
+            avg2 = Convert.ToDouble(textBox6.Text);
+            avg3 = Convert.ToDouble(textBox7.Text);
+            AVG = (avg1 + avg2 + avg3) / 3;
+            label22.Text = Convert.ToString(AVG);
+        }
+
+        //=========================習題4=========================
+        private void button5_Click(object sender, EventArgs e)
+        {
+
+            string itemA = textBox9.Text;
+            string itemB = textBox10.Text;
+            int amountA = (int)numericUpDown1.Value;
+            int amountB = (int)numericUpDown2.Value;
+            int price = 
+                Convert.ToInt32(textBox11.Text) * amountA +
+                Convert.ToInt32(textBox12.Text) * amountB;
+            int pay = Convert.ToInt32(textBox8.Text);
+            int change = pay - price;
+            int changeCount = change;
+
+            int thousand = changeCount / 1000; //計算千元紙鈔的數量
+            changeCount = changeCount % 1000; //計算完千元紙鈔後，更新找零金額
+            int fiveHundred = changeCount / 500;
+            changeCount = changeCount % 500;
+            int hundred = changeCount / 100;
+            changeCount = changeCount % 100;
+            int fifty = changeCount / 50;
+            changeCount = changeCount % 50;
+            int ten = changeCount / 10;
+            changeCount = changeCount % 10;
+            int five = changeCount / 5;
+            changeCount = changeCount % 5;
+            int one = changeCount;
+
+            string message =
+                "購買" + itemA + "與" + itemB + "共計" + price + "元\r\n" +
+                "付款金額為" + pay + "元\r\n" +
+                "找零金額為" + change + "元\r\n" +
+                "找零數量為\r\n" +
+                "1000元" + thousand + "張\r\n" + 
+                "500元" + fiveHundred + "張\r\n" + 
+                "100元" + hundred + "張\r\n" + 
+                "50元" + fifty + "枚\r\n" +
+                "10元" + ten + "枚\r\n" +
+                "5元" + five + "枚\r\n" +
+                "1元" + one + "枚";
+
+            MessageBox.Show(message);
+        }
+
+        //=========================習題5=========================
+        //可以使用右移運算 >> 來實現除以 2的n次方 的操作
+        //可以使用左移運算 << 來實現乘以 2的n次方 的操作
+        private void button8_Click(object sender, EventArgs e)
+        {
+            //8=2的3次方，因此是右移3
+            label41.Text = Convert.ToString((256 >> 3) + 10);
+        }
+
+        //習題5延伸→使用Math.Pow來計算
+        private void button6_Click(object sender, EventArgs e)
+        {
+            double inputNum = Convert.ToDouble(textBox13.Text);
+            int mulPower = (int)numericUpDown3.Value;
+            double mulResult = inputNum * Math.Pow(2, mulPower);
+            label36.Text = Convert.ToString(mulResult);
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            double inputNum = Convert.ToDouble(textBox13.Text);
+            int divPower = (int)numericUpDown4.Value;
+            double divResult = inputNum / Math.Pow(2, divPower);
+            label37.Text = Convert.ToString(divResult);
+        }
+
+        //=========================習題6=========================
+        private void button9_Click(object sender, EventArgs e)
+        {
+            //將UseSystemPasswordChar屬性設為true，在輸入密碼時會隱藏字元
+            //按下按鈕後顯現明碼
+            label44.Text = textBox14.Text;
+        }
+    }
+}
