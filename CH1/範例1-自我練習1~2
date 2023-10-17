@@ -1,0 +1,47 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace ch1_S1_P1
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        //公斤轉換成磅
+        private void button1_Click(object sender, EventArgs e)
+        {
+            float kg, lb;
+            kg = Convert.ToSingle(textBox1.Text);
+            lb = kg * 2.20462262f; //不知為何會進位變成2.20462263
+            label3.Text = lb.ToString();
+        }
+
+        //攝氏轉華氏
+        private void button2_Click(object sender, EventArgs e)
+        {
+            float cTemp, fTemp;
+            cTemp = Convert.ToSingle(textBox2.Text);
+            fTemp = cTemp * 9 / 5 + 32;
+            label5.Text = fTemp.ToString();
+        }
+
+        //華氏轉攝氏
+        private void button3_Click(object sender, EventArgs e)
+        {
+            float cTemp, fTemp;
+            fTemp = Convert.ToSingle(textBox2.Text);
+            cTemp = (fTemp - 32) * 5 / 9;
+            label6.Text = cTemp.ToString();
+        }
+    }
+}
