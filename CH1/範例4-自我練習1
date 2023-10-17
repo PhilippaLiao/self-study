@@ -1,0 +1,36 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace ch1_S4_P1
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            int money = Convert.ToInt32(textBox1.Text);
+            int pencilNum = Convert.ToInt32(textBox2.Text);
+            int eraseNum = Convert.ToInt32(textBox3.Text);
+
+            double pencilPrice = 12.3;
+            double erasePrice = 10;
+            double totalPrice = (pencilPrice * pencilNum) + (erasePrice * eraseNum);
+
+            label6.Text = totalPrice + " 元";
+
+            int change = money - Convert.ToInt32(totalPrice);
+            label7.Text = change + " 元";
+        }
+    }
+}
