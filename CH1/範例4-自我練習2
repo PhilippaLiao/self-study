@@ -1,0 +1,32 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace ch1_S4_P2
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            int year = 2018;
+            string name = textBox1.Text;
+            int age = Convert.ToInt32(textBox2.Text);
+            string phoneHead = textBox3.Text;
+            string phoneEnd = textBox4.Text;
+
+            label4.Text = "我是" + name + "，出生於西元" + (year - age)
+                + "年，電話為 " + "\"" + phoneHead + "-" + phoneEnd + "\"";
+        }
+    }
+}
