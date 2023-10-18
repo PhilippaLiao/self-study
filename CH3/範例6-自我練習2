@@ -1,0 +1,41 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace ch3_S6_P2
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            decimal S = 50.0m; //距離
+            decimal g = 9.8m;  //重力加速度
+            decimal t = 0.5m;  //時間間隔
+            string str;
+
+            while (S >= 0)
+            {
+                S -= 0.5m * g * t * t;
+                if (S < 0) //跳出迴圈，顯示抵達地面
+                    break;
+
+                str = "距離地面尚餘" + S.ToString() + "公尺" + "\r\n";
+                textBox1.AppendText(str);
+                System.Threading.Thread.Sleep(500);
+            }
+
+            textBox1.AppendText("抵達地面");
+        }
+    }
+}
