@@ -1,0 +1,48 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace ch3_S6_P1
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            int input;
+            int sum = 0;
+            int i = 1;
+            string str;
+            textBox2.Clear(); //初始化，清空資料
+
+            if (int.TryParse(textBox1.Text, out input) && input > 0) //判斷輸入為正整數
+            {
+                while (i < input)
+                {
+                    sum += i;
+                    i++;
+
+                    if (sum == 0)  //省略顯示0+1的過程
+                        continue;
+
+                    str = sum + "+" + i + "=" + (sum + i) + "\r\n";
+                    textBox2.AppendText(str);
+                }
+            }
+            else
+            {
+                MessageBox.Show("錯誤輸入");
+            }
+        }
+    }
+}
