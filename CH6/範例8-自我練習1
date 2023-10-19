@@ -1,0 +1,62 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace ch6_S8_P1
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            int length1, length2, length3;
+            Random rd = new Random();
+
+            if (!int.TryParse(textBox1.Text, out length1) || length1 <= 0 ||
+                !int.TryParse(textBox2.Text, out length2) || length2 <= 0 ||
+                !int.TryParse(textBox3.Text, out length3) || length3 <= 0)
+            {
+                textBox4.AppendText("請輸入有效長度");
+                return;
+            }
+
+            int[][] array = new int[3][];
+            array[0] = new int[length1];
+            array[1] = new int[length2];
+            array[2] = new int[length3];
+
+            for (int i = 0; i < length1; i++)
+                array[0][i] = rd.Next(100);
+            for (int i = 0; i < length2; i++)
+                array[1][i] = rd.Next(100);
+            for (int i = 0; i < length3; i++)
+                array[2][i] = rd.Next(100);
+
+            string str1 = "";
+            string str2 = "";
+            string str3 = "";
+
+            foreach (var item in array[0])
+                str1 += item + ", ";
+            foreach (var item in array[1])
+                str2 += item + ", ";
+            foreach (var item in array[2])
+                str3 += item + ", ";
+
+            textBox4.AppendText("陣列1：" + str1 + "\r\n" +
+                                "陣列2：" + str2 + "\r\n" +
+                                "陣列3：" + str3 + "\r\n" +
+                                "----------------------" + "\r\n");
+        }
+    }
+}
