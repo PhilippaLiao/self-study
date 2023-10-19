@@ -1,0 +1,59 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace ch6_S6_P1
+{
+    public partial class Form1 : Form
+    {
+        int[] array = { 4, 12, 87, 45, 14, 13, 56, 9, 33, 6, 21, 8 };
+
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            int del = -1; //要刪除的值，-1表示沒有在陣列中
+            int val; //使用者輸入的值
+            int length = array.Length;
+
+            if (!int.TryParse(textBox1.Text, out val))
+            {
+                MessageBox.Show("請輸入數字");
+                return;
+            }
+
+            //找尋是否在陣列中
+            for (int i = 0; i < length; i++)
+            {
+                if (array[i] == val)
+                {
+                    del = i;
+                    break;
+                }
+            }
+            if (del == -1)
+            {
+                MessageBox.Show("沒有找到要刪除的值");
+                return;
+            }
+
+            //將del以後的值往前覆蓋
+            for (int i = del; i < length - 1; i++)
+                array[i] = array[i + 1];
+
+            Array.Resize(ref array, length - 1);
+            foreach (var item in array)
+                textBox2.AppendText(item + "\r\n");
+            textBox2.AppendText("陣列長度為" + array.Length.ToString() + "\r\n");
+        }
+    }
+}
