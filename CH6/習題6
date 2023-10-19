@@ -1,0 +1,338 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace Ch6_Exercise_6
+{
+    public partial class Form1 : Form
+    {
+        //3個班級/人數[學號,國,英,數,總分,排名]
+        int[][,] grade = new int[3][,]
+            {
+                new int[,]{ { 10101, 0, 0, 0, 0, 1 },  { 10102, 0, 0, 0, 0, 1 }, { 10103, 0, 0, 0, 0, 1 }, { 10104, 0, 0, 0, 0, 1 } },
+                new int[,]{ { 10201, 0, 0, 0, 0, 1 },  { 10202, 0, 0, 0, 0, 1 }, { 10203, 0, 0, 0, 0, 1 } },
+                new int[,]{ { 10301, 0, 0, 0, 0, 1 },  { 10302, 0, 0, 0, 0, 1 }, { 10303, 0, 0, 0, 0, 1 }, { 10304, 0, 0, 0, 0, 1 }, { 10305, 0, 0, 0, 0, 1 } }
+            };
+        int A_member = 4;
+        int B_member = 3;
+        int C_member = 5;
+        int max_member = 5; //最大的班級人數
+        bool A_record = false; //判定是否有記錄到成績（按下計算班級排名）
+        bool B_record = false;
+        bool C_record = false;
+        int chAvg = 0;
+        int enAvg = 0;
+        int mathAvg = 0;
+
+        public Form1()
+        {
+            InitializeComponent();
+
+            //增加列&設定列高欄寬
+            for (int i = 0; i < 5; i++)
+            {
+                dataGridView1.Rows.Add();
+                dataGridView1.Rows[i].Height = 25;
+            }
+            for (int i = 0; i < 6; i++)
+                dataGridView1.Columns[i].Width = 70;
+
+            //設定dataGridView的寬高
+            dataGridView1.Width = dataGridView1.Columns[0].Width * 7;
+            dataGridView1.Height = dataGridView1.Rows[0].Height * 7;
+
+            //設定表頭
+            dataGridView1.Rows[0].Cells[0].Value = grade[0][0, 0];
+            dataGridView1.Rows[1].Cells[0].Value = grade[0][1, 0];
+            dataGridView1.Rows[2].Cells[0].Value = grade[0][2, 0];
+            dataGridView1.Rows[3].Cells[0].Value = grade[0][3, 0];
+
+            //設定禁止輸入區
+            dataGridView1.Rows[4].DefaultCellStyle.BackColor = Color.LightGray;
+            dataGridView1.Rows[4].ReadOnly = true;
+
+            //禁用標題列排序
+            foreach (DataGridViewColumn column in dataGridView1.Columns)
+                column.SortMode = DataGridViewColumnSortMode.NotSortable;
+
+            //計算排名按鈕的位置
+            button1.Location = new Point(dataGridView1.Left, dataGridView1.Bottom + 20);
+
+            //總平均欄位的位置
+            textBox1.Location = new Point(dataGridView1.Left + dataGridView1.Width + 20, 
+                                          dataGridView1.Top);
+            button2.Location = new Point(textBox1.Left, textBox1.Bottom + 20);
+
+            //預設comboBox為一年A班
+            comboBox1.SelectedIndex = 0;
+
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            switch (comboBox1.SelectedIndex)
+            {
+                case 0: //A班
+                    //清空資料
+                    for (int i = 0; i < max_member; i++)
+                    {
+                        for (int j = 0; j < 6; j++)
+                            dataGridView1.Rows[i].Cells[j].Value = "";
+                    }
+                    //匯入資料
+                    for (int i = 0; i < A_member; i++)
+                    {
+                        for (int j = 0; j < 6; j++)
+                        {
+                            dataGridView1.Rows[i].Cells[j].Value = grade[0][i, j];
+                            if (!A_record) //還沒紀錄
+                                break;  //略過
+                        }
+                        dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.White;
+                        dataGridView1.Rows[i].ReadOnly = false;
+                    }
+                    for (int i = A_member; i < max_member; i++) //將沒用到的行設成淺灰色
+                    {
+                        dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.LightGray;
+                        dataGridView1.Rows[i].ReadOnly = true;
+                    }
+                    break;
+                case 1: //B班
+                    //清空資料
+                    for (int i = 0; i < max_member; i++)
+                    {
+                        for (int j = 0; j < 6; j++)
+                            dataGridView1.Rows[i].Cells[j].Value = "";
+                    }
+                    //匯入資料
+                    for (int i = 0; i < B_member; i++)
+                    {
+                        for (int j = 0; j < 6; j++)
+                        {
+                            dataGridView1.Rows[i].Cells[j].Value = grade[1][i, j];
+                            if (!B_record) //還沒紀錄
+                                break;  //略過
+                        }
+                        dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.White;
+                        dataGridView1.Rows[i].ReadOnly = false;
+                    }
+                    for (int i = B_member; i < max_member; i++)
+                    {
+                        dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.LightGray;
+                        dataGridView1.Rows[i].ReadOnly = true;
+                    }
+                    break;
+                case 2: //C班
+                    //清空資料
+                    for (int i = 0; i < max_member; i++)
+                    {
+                        for (int j = 0; j < 6; j++)
+                            dataGridView1.Rows[i].Cells[j].Value = "";
+                    }
+                    //匯入資料
+                    for (int i = 0; i < C_member; i++)
+                    {
+                        for (int j = 0; j < 6; j++)
+                        {
+                            dataGridView1.Rows[i].Cells[j].Value = grade[2][i, j];
+                            if (!C_record) //還沒紀錄
+                                break;  //略過
+                        }
+                        dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.White;
+                        dataGridView1.Rows[i].ReadOnly = false;
+                    }
+                    for (int i = C_member; i < max_member; i++)
+                    {
+                        dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.LightGray;
+                        dataGridView1.Rows[i].ReadOnly = true;
+                    }
+                    break;
+            }
+        }
+
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            //計算總分
+            switch (comboBox1.SelectedIndex)
+            {
+                case 0: //A班
+                    try
+                    {
+                        //計算總分
+                        int[] sumArray = new int[A_member];
+                        for (int i = 0; i < A_member; i++)
+                        {
+                            for (int j = 1; j <= 3; j++)
+                                grade[0][i, j] = Convert.ToInt32(dataGridView1.Rows[i].Cells[j].Value);
+                            grade[0][i, 4] = grade[0][i, 1] + grade[0][i, 2] + grade[0][i, 3];
+                            dataGridView1.Rows[i].Cells[4].Value = grade[0][i, 4].ToString();
+                            sumArray[i] = grade[0][i, 4];
+                        }
+                        //計算排名
+                        Array.Sort(sumArray);
+                        Array.Reverse(sumArray);
+                        int rank = 1;
+                        for (int i = 0; i < A_member; i++) //遍歷sumArray
+                        {
+                            for (int j = 0; j < A_member; j++) //遍歷學生成績
+                            {
+                                if (sumArray[i] == grade[0][j, 4]) //如果最高分=此學生分數
+                                {
+                                    grade[0][j, 5] = rank;
+                                    //判定是否同分，若不同分=較低分=排名+1
+                                    if (i < A_member - 1 && sumArray[i] != sumArray[i + 1]) 
+                                    {
+                                        rank++;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        for (int i = 0; i < A_member; i++)
+                            dataGridView1.Rows[i].Cells[5].Value = grade[0][i, 5];
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("成績尚未全部輸入完全，無法計算");
+                        return;
+                    }
+                    A_record = true;
+                    break;
+                case 1: //B班
+                    try
+                    {
+                        //計算總分
+                        int[] sumArray = new int[B_member];
+                        for (int i = 0; i < B_member; i++)
+                        {
+                            for (int j = 1; j <= 3; j++)
+                                grade[1][i, j] = Convert.ToInt32(dataGridView1.Rows[i].Cells[j].Value);
+                            grade[1][i, 4] = grade[1][i, 1] + grade[1][i, 2] + grade[1][i, 3];
+                            dataGridView1.Rows[i].Cells[4].Value = grade[1][i, 4].ToString();
+                            sumArray[i] = grade[1][i, 4];
+                        }
+                        //計算排名
+                        Array.Sort(sumArray);
+                        Array.Reverse(sumArray);
+                        int rank = 1;
+                        for (int i = 0; i < B_member; i++) //遍歷sumArray
+                        {
+                            for (int j = 0; j < B_member; j++) //遍歷學生成績
+                            {
+                                if (sumArray[i] == grade[1][j, 4]) //如果最高分=此學生分數
+                                {
+                                    grade[1][j, 5] = rank;
+                                    //判定是否同分，若不同分=較低分=排名+1
+                                    if (i < B_member - 1 && sumArray[i] != sumArray[i + 1])
+                                    {
+                                        rank++;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        for (int i = 0; i < B_member; i++)
+                            dataGridView1.Rows[i].Cells[5].Value = grade[1][i, 5];
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("成績尚未全部輸入完全，無法計算");
+                        return;
+                    }
+                    B_record = true;
+                    break;
+                case 2: //C班
+                    try
+                    {
+                        //計算總分
+                        int[] sumArray = new int[C_member];
+                        for (int i = 0; i < C_member; i++)
+                        {
+                            for (int j = 1; j <= 3; j++)
+                                grade[2][i, j] = Convert.ToInt32(dataGridView1.Rows[i].Cells[j].Value);
+                            grade[2][i, 4] = grade[2][i, 1] + grade[2][i, 2] + grade[2][i, 3];
+                            dataGridView1.Rows[i].Cells[4].Value = grade[2][i, 4].ToString();
+                            sumArray[i] = grade[2][i, 4];
+                        }
+                        //計算排名
+                        Array.Sort(sumArray);
+                        Array.Reverse(sumArray);
+                        int rank = 1;
+                        for (int i = 0; i < C_member; i++) //遍歷sumArray
+                        {
+                            for (int j = 0; j < C_member; j++) //遍歷學生成績
+                            {
+                                if (sumArray[i] == grade[2][j, 4]) //如果最高分=此學生分數
+                                {
+                                    grade[2][j, 5] = rank;
+                                    //判定是否同分，若不同分=較低分=排名+1
+                                    if (i < C_member - 1 && sumArray[i] != sumArray[i + 1])
+                                    {
+                                        rank++;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        for (int i = 0; i < C_member; i++)
+                            dataGridView1.Rows[i].Cells[5].Value = grade[2][i, 5];
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("成績尚未全部輸入完全，無法計算");
+                        return;
+                    }
+                    C_record = true;
+                    break;
+            }
+        }
+
+        //計算各科總平均
+        private void button2_Click(object sender, EventArgs e)
+        {
+            textBox1.Clear();
+            if (!A_record || !B_record || !C_record)
+            {
+                MessageBox.Show("成績尚未全部輸入完全，無法計算");
+                return;
+            }
+
+            //國文科
+            for (int i = 0; i < A_member; i++)
+                chAvg += grade[0][i, 1];
+            for (int i = 0; i < B_member; i++)
+                chAvg += grade[1][i, 1];
+            for (int i = 0; i < C_member; i++)
+                chAvg += grade[2][i, 1];
+            chAvg /= (A_member + B_member + C_member);
+            textBox1.AppendText("國文科總平均：" + chAvg.ToString() + "\r\n");
+
+            //英文科
+            for (int i = 0; i < A_member; i++)
+                enAvg += grade[0][i, 2];
+            for (int i = 0; i < B_member; i++)
+                enAvg += grade[1][i, 2];
+            for (int i = 0; i < C_member; i++)
+                enAvg += grade[2][i, 2];
+            enAvg /= (A_member + B_member + C_member);
+            textBox1.AppendText("英文科總平均：" + enAvg.ToString() + "\r\n");
+
+            //數學科
+            for (int i = 0; i < A_member; i++)
+                mathAvg += grade[0][i, 3];
+            for (int i = 0; i < B_member; i++)
+                mathAvg += grade[1][i, 3];
+            for (int i = 0; i < C_member; i++)
+                mathAvg += grade[2][i, 3];
+            mathAvg /= (A_member + B_member + C_member);
+            textBox1.AppendText("數學科總平均：" + mathAvg.ToString());
+        }
+    }
+}
