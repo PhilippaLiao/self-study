@@ -1,0 +1,87 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace ch6_S5_P1
+{
+    public partial class Form1 : Form
+    {
+
+        int[] array = new int[20];
+
+        public Form1()
+        {
+            InitializeComponent();
+            label2.Text = "";
+            label3.Text = "";
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            label2.Text = "";
+            label3.Text = "";
+
+            Random rd = new Random();
+
+            for (int i = 0; i < array.Length; i++)
+                array[i] = i + 1;
+
+            for (int i = array.Length - 1; i >= 0; i--)
+            {
+                int j = rd.Next(i);
+                int temp = array[i];
+                array[i] = array[j];
+                array[j] = temp;
+            }
+
+            Array.Resize(ref array, 12); //將陣列縮減至12
+            Array.Sort(array); //為了使用二分搜尋法，將陣列做整理
+
+            button2.Enabled = true; //將搜尋的按鈕變更為可操作
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+
+            int val; //使用者輸入的值
+            if (!int.TryParse(textBox1.Text, out val)) //防呆
+            {
+                label2.Text = "請輸入數字！";
+                return;
+            }
+
+            //二分搜尋法
+            int low = 0;  //左指針
+            int high = array.Length - 1; //右指針
+            int mid; //中間位置
+
+            while (low <= high) //當左指針不超過右指針時
+            {
+                mid = low + (high - low) / 2; //取中間位置
+
+                if (array[mid] < val) //若搜尋的值偏右
+                    low = mid + 1;    //左指針的位置調到中心位置右一格
+                else if (array[mid] > val) //若搜尋的值偏左
+                    high = mid - 1;        //右指針的位置調到中心位置左一格
+                else
+                {
+                    label2.Text = "找到了！";
+                    foreach (var item in array)
+                        label3.Text += item + ", ";
+                    textBox1.Clear();
+                    button2.Enabled = false;
+                    return;
+                }
+            }
+
+            label2.Text = "找不到！";
+        }
+    }
+}
