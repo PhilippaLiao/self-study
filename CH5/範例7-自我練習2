@@ -1,0 +1,51 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace ch5_S7_P2
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            string item = textBox1.Text;
+            int price, quantity, totalPrice;
+            bool isPriceValid = int.TryParse(textBox2.Text, out price);
+            bool isQuanityValid = int.TryParse(textBox3.Text, out quantity);
+
+            if (!isPriceValid || !isQuanityValid)
+            {
+                label4.Text = "請輸入有效數值！";
+                label4.ForeColor = Color.Red;
+                label4.Visible = true;
+                return;
+            }
+
+            totalPrice = price * quantity;
+            StringBuilder output = new StringBuilder();
+            output.AppendFormat("您買了{0}個{1}，一個單價{2}元，總計{3}元。", quantity, item, price, totalPrice);
+            label4.Text = output.ToString();
+            label4.ForeColor = Color.Black;
+            label4.Visible = true;
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            textBox1.Clear();
+            textBox2.Clear();
+            textBox3.Clear();
+            label4.Visible = false;
+        }
+    }
+}
