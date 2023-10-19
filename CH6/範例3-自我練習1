@@ -1,0 +1,83 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace ch6_S3_P1
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            textBox1.Clear();
+
+            Random rd = new Random();
+            int[] initialArray = new int[50];
+            int[] finalArray = new int[11];
+
+            //建立1-50的初始陣列
+            for (int i = 0; i < initialArray.Length; i++)
+                initialArray[i] = i + 1;
+            //洗牌法，製造不重複亂數的陣列
+            for (int i = initialArray.Length - 1; i > 0; i--)
+            {
+                int j = rd.Next(i + 1);
+                int temp = initialArray[i];
+                initialArray[i] = initialArray[j];
+                initialArray[j] = temp;
+            }
+            //取前11個元素至finalArray
+            Array.Copy(initialArray, finalArray, 11);
+
+            //顯示finalArray陣列
+            foreach (var item in finalArray)
+                textBox1.AppendText(item.ToString() + ", ");
+            textBox1.AppendText("\r\n");
+
+            //-------------------------------------------------
+            //遞增排序
+            Array.Sort(finalArray);
+            foreach (var item in finalArray)
+                textBox1.AppendText(item.ToString() + ", ");
+            textBox1.AppendText("\r\n");
+
+            //找出中間值
+            int median = finalArray[(finalArray.Length - 1) / 2];
+            textBox1.AppendText("中位數：" + median + "\r\n");
+
+            //找出第三大的值
+            textBox1.AppendText("第三大的值：" + finalArray[2] + "\r\n");
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            textBox1.Clear();
+
+            int[] array = new int[5] { 1, 2, 3, 4, 5};
+
+            //a. 將陣列容量增加至10
+            Array.Resize(ref array, 10);
+
+            //b. 將5個元素分別移動到陣列位置0、2、4、6、8
+            for (int i = 4; i >= 0; i--)
+                Array.Copy(array, i, array, i * 2, 1);
+
+            //c. 將整數6、7、8、9、10插入陣列位置1、3、5、7、9
+            for (int i = 0; i < 5; i++)
+                array[i * 2 + 1] = i + 6;
+
+            foreach (var item in array)
+                textBox1.AppendText(item.ToString() + ", ");
+        }
+    }
+}
