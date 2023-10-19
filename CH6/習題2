@@ -1,0 +1,427 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace Ch6_Exercise_2
+{
+    /*
+    【關於此習題】
+    這一題寫了非～常～久，原本以為就是比Ch6_Exercise_1更擴充一些而已。
+    1.使用「上一筆資料」、「下一筆資料」的方式瀏覽成績，花了一些時間在設計。
+    2.花了很多時間在處理將資料匯入dataGridView1，主要是在計算總分及平均的部分調整很久。
+    3.在顯示排名的部分，配合第1點，因此故意也做成要用按鈕控制瀏覽頁的模式（而不是做成表格）
+      然而因此花了很多時間，腦子都要打結了，
+      這部分直接求助chatGPT，才想起有Array.Reverse這個方法可用，
+      計算排名的方法直接搬chatGPT的做法。
+    4.有想過只建一個二維陣列[5, 8]，將成績和排名都存在一起，
+      但因為覺得這樣陣列好大，也因為有點懶得改，就還是分成兩個陣列了。
+      最後為了陣列的調整也費了些時間。
+    */
+
+    public partial class Form1 : Form
+    {
+        //二維陣列：學號、國/英/數成績、總分
+        int[,] stuArray = new int[5, 5] { { 11201, 0, 0, 0, 0 },
+                                          { 11202, 0, 0, 0, 0 },
+                                          { 11203, 0, 0, 0, 0 },
+                                          { 11204, 0, 0, 0, 0 },
+                                          { 11205, 0, 0, 0, 0 }};
+        //二維陣列：學號、國/英/數/總分排名
+        int[,] rankArray = new int[5, 5] { { 11201, 1, 1, 1, 1 },
+                                           { 11202, 1, 1, 1, 1 },
+                                           { 11203, 1, 1, 1, 1 },
+                                           { 11204, 1, 1, 1, 1 },
+                                           { 11205, 1, 1, 1, 1 }};
+
+        string[] rankTitle = { "國文科", "英文科", "數學科", "總分" };
+
+        int dataNumber = 0; //預設在第一筆資料
+        int score;
+        bool fgOK = false;
+        int inputID;
+        int rankData = 1;
+
+        public Form1()
+        {
+            InitializeComponent();
+
+            button1.Enabled = false; //預設"上一筆資料"按鈕為不可使用
+
+            //===================建立dataGridView===================
+            //增加資料列與儲存格寬高
+            for (int i = 0; i < 6; i++)
+            {
+                dataGridView1.Rows.Add();
+                dataGridView1.Rows[i].Height = 25;
+            }
+            for (int i = 0; i < 6; i++)
+                dataGridView1.Columns[i].Width = 70;
+
+            //表頭：匯入學號
+            for (int i = 0; i < 5; i++)
+                dataGridView1.Rows[i].Cells[0].Value = stuArray[i, 0].ToString();
+            //表頭：加入各科平均+淺灰底
+            dataGridView1.Rows[5].Cells[0].Value = "平均";
+            dataGridView1.Rows[5].DefaultCellStyle.BackColor = Color.LightGray;
+
+            //dataGridView的寬高
+            dataGridView1.Width = dataGridView1.Columns[0].Width * 6;
+            dataGridView1.Height = dataGridView1.Rows[0].Height * 9;
+        }
+
+        //===================第一頁：輸入資料===================
+
+        //檢查使用者只能按數字鍵與控制鍵
+        private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (Char.IsDigit(e.KeyChar) || Char.IsControl(e.KeyChar))
+                e.Handled = false;
+            else
+                e.Handled = true;
+        }
+        private void textBox2_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (Char.IsDigit(e.KeyChar) || Char.IsControl(e.KeyChar))
+                e.Handled = false;
+            else
+                e.Handled = true;
+        }
+        private void textBox3_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (Char.IsDigit(e.KeyChar) || Char.IsControl(e.KeyChar))
+                e.Handled = false;
+            else
+                e.Handled = true;
+        }
+
+
+        //檢查是否為數字且介於0-100，並將資料存入陣列
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                //國文成績
+                score = Convert.ToInt32(textBox1.Text);
+                fgOK = true;
+                if (score >= 0 && score <= 100)
+                    stuArray[dataNumber, 1] = score;
+                else
+                {
+                    MessageBox.Show("成績介於0~100之間");
+                    textBox1.Text = "0";
+                    return;
+                }
+            }
+            catch (Exception)
+            {
+                fgOK = false;
+                MessageBox.Show("輸入錯誤");
+            }
+        }
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                //英文成績
+                score = Convert.ToInt32(textBox2.Text);
+                fgOK = true;
+                if (score >= 0 && score <= 100)
+                    stuArray[dataNumber, 2] = score;
+                else
+                {
+                    MessageBox.Show("成績介於0~100之間");
+                    textBox2.Text = "0";
+                    return;
+                }
+            }
+            catch (Exception)
+            {
+                fgOK = false;
+                MessageBox.Show("輸入錯誤");
+            }
+        }
+        private void textBox3_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                //數學成績
+                score = Convert.ToInt32(textBox3.Text);
+                fgOK = true;
+                if (score >= 0 && score <= 100)
+                    stuArray[dataNumber, 3] = score;
+                else
+                {
+                    MessageBox.Show("成績介於0~100之間");
+                    textBox3.Text = "0";
+                    return;
+                }
+            }
+            catch (Exception)
+            {
+                fgOK = false;
+                MessageBox.Show("輸入錯誤");
+            }
+        }
+
+
+        //按鈕：瀏覽資料
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (dataNumber > 0)
+                dataNumber -= 1;
+
+            if (dataNumber > 0)
+                button1.Enabled = true;
+            else
+                button1.Enabled = false;
+            if (dataNumber < 4)
+                button2.Enabled = true;
+            else
+                button2.Enabled = false;
+
+            label1.Text = "學號：" + stuArray[dataNumber, 0].ToString();
+            textBox1.Text = stuArray[dataNumber, 1].ToString();
+            textBox2.Text = stuArray[dataNumber, 2].ToString();
+            textBox3.Text = stuArray[dataNumber, 3].ToString();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if (dataNumber < 4)
+                dataNumber += 1;
+
+            if (dataNumber > 0)
+                button1.Enabled = true;
+            else
+                button1.Enabled = false;
+
+            if (dataNumber < 4)
+                button2.Enabled = true;
+            else
+                button2.Enabled = false;
+
+            label1.Text = "學號：" + stuArray[dataNumber, 0].ToString();
+            textBox1.Text = stuArray[dataNumber, 1].ToString();
+            textBox2.Text = stuArray[dataNumber, 2].ToString();
+            textBox3.Text = stuArray[dataNumber, 3].ToString();
+        }
+
+
+        //===================第二頁：用學號找尋資料===================
+        
+        private void textBox4_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            //限制只能使用數字鍵與控制鍵
+            if (Char.IsDigit(e.KeyChar) || Char.IsControl(e.KeyChar))
+                e.Handled = false;
+            else
+                e.Handled = true;
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            String str, title;
+
+            if (!int.TryParse(textBox4.Text, out inputID))
+            {
+                MessageBox.Show("輸入錯誤");
+                return;
+            }
+
+            for (int i = 0; i < 5; i++)
+            {
+                if (inputID == stuArray[i, 0])
+                {
+                    title = "學生 " + stuArray[i, 0].ToString() + "成績";
+                    str = "國文：" + stuArray[i, 1].ToString() + "分\r\n" +
+                          "英文：" + stuArray[i, 2].ToString() + "分\r\n" +
+                          "數學：" + stuArray[i, 3].ToString() + "分";
+                    MessageBox.Show(str, title);
+                    break;
+                }
+                else
+                {
+                    MessageBox.Show("查無此學號");
+                    return;
+                }
+            }
+        }
+
+
+        
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //===================第三頁：顯示成績、總分與平均===================
+            if (tabControl1.SelectedTab == tabPage3)
+            {
+                if (fgOK == false)
+                    return;
+
+                //匯入成績
+                for (int i = 0; i < 5; i++)
+                {
+                    for (int j = 1; j < 4; j++)
+                    {
+                        dataGridView1.Rows[i].Cells[j].Value = stuArray[i, j];
+
+                        if ((int)dataGridView1.Rows[i].Cells[j].Value < 60)
+                            dataGridView1.Rows[i].Cells[j].Style.ForeColor = Color.Red;
+                        else
+                            dataGridView1.Rows[i].Cells[j].Style.ForeColor = Color.Black;
+                    }
+                }
+
+                //計算個人總分與平均
+                for (int i = 0; i < 5; i++)
+                {
+                    stuArray[i, 4] = stuArray[i, 1] + stuArray[i, 2] + stuArray[i, 3];
+                    dataGridView1.Rows[i].Cells[4].Value = stuArray[i, 4];
+
+                    double averageScore = Math.Round((double)stuArray[i, 4] / 3.0);
+                    dataGridView1.Rows[i].Cells[5].Value = averageScore.ToString();
+                    if (averageScore < 60)
+                        dataGridView1.Rows[i].Cells[5].Style.ForeColor = Color.Red;
+                    else
+                        dataGridView1.Rows[i].Cells[5].Style.ForeColor = Color.Black;
+                }
+
+                //計算各科平均
+                for (int j = 1; j < 5; j++)
+                {
+                    int subTotal = 0;
+                    double subAvg = 0.0;
+
+                    for (int i = 0; i < 5; i++)
+                        subTotal += Convert.ToInt32(dataGridView1.Rows[i].Cells[j].Value);
+
+                    subAvg = Math.Round((double)subTotal / 5.0);
+                    dataGridView1.Rows[5].Cells[j].Value = subAvg.ToString();
+                    if (subAvg < 60)
+                        dataGridView1.Rows[5].Cells[j].Style.ForeColor = Color.Red;
+                    else
+                        dataGridView1.Rows[5].Cells[j].Style.ForeColor = Color.Black;
+                }
+
+                //計算總平均
+                double totalAvg = 0;
+                for (int i = 0; i < 5; i++)
+                {
+                    totalAvg += Convert.ToDouble(dataGridView1.Rows[i].Cells[5].Value);
+                }
+                totalAvg = Math.Round(totalAvg / 5.0);
+                dataGridView1.Rows[5].Cells[5].Value = totalAvg.ToString();
+                if (totalAvg < 60)
+                    dataGridView1.Rows[5].Cells[5].Style.ForeColor = Color.Red;
+                else
+                    dataGridView1.Rows[5].Cells[5].Style.ForeColor = Color.Black;
+            }
+
+            //===================第四頁：顯示排名===================
+            if (tabControl1.SelectedTab == tabPage4)
+            {
+                if (fgOK == false)
+                    return;
+
+                int[] chiScores = new int[5];
+                int[] engScores = new int[5];
+                int[] mathScores = new int[5];
+                int[] totalScores = new int[5];
+
+                //匯入分數
+                for (int i = 0; i < 5; i++)
+                {
+                    chiScores[i] = stuArray[i, 1];
+                    engScores[i] = stuArray[i, 2];
+                    mathScores[i] = stuArray[i, 3];
+                    totalScores[i] = stuArray[i, 1] + stuArray[i, 2] + stuArray[i, 3];
+                }
+
+                //排序
+                Array.Sort(chiScores);
+                Array.Sort(engScores);
+                Array.Sort(mathScores);
+                Array.Sort(totalScores);
+
+                Array.Reverse(chiScores);
+                Array.Reverse(engScores);
+                Array.Reverse(mathScores);
+                Array.Reverse(totalScores);
+
+                //匯入排名
+                for (int i = 0; i < 5; i++)
+                {
+                    for (int j = 0; j < 5; j++)
+                    {
+                        if (chiScores[j] > stuArray[i, 1])
+                            rankArray[i, 1]++;
+                        if (engScores[j] > stuArray[i, 2])
+                            rankArray[i, 2]++;
+                        if (mathScores[j] > stuArray[i, 3])
+                            rankArray[i, 3]++;
+                        if (totalScores[j] > stuArray[i, 4])
+                            rankArray[i, 4]++;
+                    }
+                }
+                //顯示學號、成績、排名
+                String rankStr = rankTitle[rankData - 1] + "\r\n";
+                textBox5.Clear();
+                for (int i = 0; i < 5; i++)
+                {
+                    rankStr += stuArray[i, 0] + " " + stuArray[i, rankData] + "分 " + rankArray[i, rankData] + "\r\n";
+                }
+                textBox5.AppendText(rankStr);
+            }
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            if (rankData > 1)
+                rankData -= 1;
+
+            if (rankData > 1)
+                button4.Enabled = true;
+            else
+                button4.Enabled = false;
+            if (rankData < 4)
+                button5.Enabled = true;
+            else
+                button5.Enabled = false;
+
+            String rankStr = rankTitle[rankData - 1] + "\r\n";
+            textBox5.Clear();
+            for (int i = 0; i < 5; i++)
+            {
+                rankStr += stuArray[i, 0] + " " + stuArray[i, rankData] + "分 " + rankArray[i, rankData] + "\r\n";
+            }
+            textBox5.AppendText(rankStr);
+        }
+        private void button5_Click(object sender, EventArgs e)
+        {
+            if (rankData < 4)
+                rankData += 1;
+
+            if (rankData > 1)
+                button4.Enabled = true;
+            else
+                button4.Enabled = false;
+            if (rankData < 4)
+                button5.Enabled = true;
+            else
+                button5.Enabled = false;
+
+            String rankStr = rankTitle[rankData - 1] + "\r\n";
+            textBox5.Clear();
+            for (int i = 0; i < 5; i++)
+            {
+                rankStr += stuArray[i, 0] + " " + stuArray[i, rankData] + "分 " + rankArray[i, rankData] + "\r\n";
+            }
+            textBox5.AppendText(rankStr);
+        }
+    }
+}
