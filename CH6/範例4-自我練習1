@@ -1,0 +1,60 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace ch6_S4_P1
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+
+            for (int i = 0; i <= 4; i++)
+                dataGridView1.Rows.Add();
+
+            dataGridView1.Width = dataGridView1.Columns[0].Width * 6;
+            dataGridView1.Height = dataGridView1.Rows[0].Height * 6;
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Random rd = new Random();
+            int[] rdArray = new int[25];
+
+            //依序填入1-25
+            for (int i = 0; i < rdArray.Length; i++)
+                rdArray[i] = i + 1;
+
+            //洗牌法，隨機交換位置，做出亂數陣列
+            for (int i = rdArray.Length - 1; i >= 0; i--)
+            {
+                int j = rd.Next(1, i + 1);
+                int temp = rdArray[i];
+                rdArray[i] = rdArray[j];
+                rdArray[j] = temp;
+            }
+
+            //將亂數陣列填入dataGridView
+            int row = 0;
+            int column = 0;
+            foreach (var number in rdArray)
+            {
+                dataGridView1.Rows[row].Cells[column].Value = number;
+                column++;
+                if (column >= 5)
+                {
+                    column = 0;
+                    row++;
+                }
+            }
+        }
+    }
+}
