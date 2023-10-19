@@ -1,0 +1,55 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace Ch5_Exercise_1
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            string str1 = "ID,Et%o3,st,oC,Gm yr,Dy e s,tWe;r*dBa y;.Q";
+            string str2 = " wSe,n t1,ds c$h,o oFlf,ww,rRi t e@,3hoo mme,w#oer.k ";
+
+            StringBuilder str3 = new StringBuilder();
+            StringBuilder str4 = new StringBuilder();
+            for (int i = 0; i < str1.Length; i += 2)
+                str3.Append(str1[i]);
+            for (int i = 1; i < str2.Length; i += 2)
+                str4.Append(str2[i]);
+
+            string[] str5 = str3.ToString().Split(',');
+            string[] str6 = str4.ToString().Split(',');
+
+            StringBuilder result = new StringBuilder();
+            int maxLength = Math.Max(str5.Length, str6.Length); //取陣列元素最大值
+            for (int i = 0; i < maxLength; i++)
+            {
+                if (i < str5.Length)
+                {
+                    result.Append(str5[i]);
+                    result.Append(" ");
+                }
+                if (i < str6.Length)
+                {
+                    result.Append(str6[i]);
+                    result.Append(" ");
+                }
+            }
+
+            result.ToString().Trim(); //去除頭尾空格
+            label1.Text = result.ToString();
+        }
+    }
+}
