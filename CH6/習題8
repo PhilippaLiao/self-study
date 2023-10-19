@@ -1,0 +1,100 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace Ch6_Exercise_8
+{
+    public partial class Form1 : Form
+    {
+        PictureBox[,] holes = new PictureBox[3, 3]; //宣告陣列
+        Timer timer;
+        Random rd = new Random();
+        int score;
+
+        public Form1()
+        {
+            InitializeComponent();
+
+            //設定PictureBox
+            int w_h = 50;
+            int gap = w_h + 30;
+
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    holes[i, j] = new PictureBox();
+                    holes[i, j].Tag = i * 3 + j;
+                    holes[i, j].Size = new Size(w_h, w_h);
+                    holes[i, j].Image = Properties.Resources.diglett;
+                    holes[i, j].SizeMode = PictureBoxSizeMode.Zoom;
+                    holes[i, j].Location = new Point(100 + j * gap, 100 + i * gap);
+                    holes[i, j].Click += MyClick;
+                    this.Controls.Add(holes[i, j]);
+                }
+            }
+
+            //設定timer
+            timer = new Timer();
+            timer.Interval = 1000;
+            timer.Tick += timerTick;
+
+            //設定初始值
+            score = 0;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            timer.Start();
+        }
+
+
+        private void MyClick(object sender, EventArgs e)
+        {
+            PictureBox hole = (PictureBox)sender;
+
+            //檢查是否打到地鼠
+            if (hole.Image != null)
+                score += 5;
+            else
+                score -= 5;
+
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                    holes[i, j].Image = null;
+            }
+            int x = rd.Next(2);
+            int y = rd.Next(2);
+            holes[x, y].Image = Properties.Resources.diglett;
+
+            label1.Text = "分數：" + score + "分";
+
+            if (score >= 100)
+            {
+                timer.Stop();
+                MessageBox.Show("恭喜達到100分！遊戲結束！");
+                this.Close();
+            }
+        }
+
+        private void timerTick(object sender, EventArgs e)
+        {
+
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                    holes[i, j].Image = null;
+            }
+            int x = rd.Next(2);
+            int y = rd.Next(2);
+            holes[x, y].Image = Properties.Resources.diglett;
+        }
+    }
+}
