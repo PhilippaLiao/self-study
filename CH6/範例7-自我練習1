@@ -1,0 +1,62 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace ch6_S7_P1
+{
+    public partial class Form1 : Form
+    {
+
+        int[] array = { 1, 2, 3, 4, 5, 6 };
+
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            int insertNo;
+            int insertVal;
+            int length;
+
+            if (!int.TryParse(textBox1.Text, out insertNo) ||
+               !int.TryParse(textBox2.Text, out insertVal))
+            {
+                MessageBox.Show("請輸入數字");
+                return;
+            }
+
+            length = array.Length;
+            if (insertNo < 0 || insertNo >= length + 1)
+            {
+                MessageBox.Show("插入的位置超過範圍");
+                return;
+            }
+
+            //調整陣列大小
+            Array.Resize(ref array, length + 1);
+
+            //從尾巴開始往右複製一位，直到預計插入的位置為止
+            int j;
+            for (int i = length - 1; i >= insertNo; i--)
+            {
+                array[i + 1] = array[i];
+            }
+
+            //插入數值
+            array[insertNo] = insertVal;
+
+            //印出最終結果
+            foreach (var item in array)
+                textBox3.AppendText(item.ToString() + "\r\n");
+            textBox3.AppendText("陣列長度 = " + array.Length.ToString() + "\r\n");
+        }
+    }
+}
