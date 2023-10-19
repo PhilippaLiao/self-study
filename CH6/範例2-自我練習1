@@ -1,0 +1,125 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace ch6_S2_P1
+{
+    public partial class Form1 : Form
+    {
+        Random rd = new Random();
+
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            textBox1.Clear();
+
+            int[] initialArray = new int[50];
+            int[] shuffledArray = new int[11];
+            int temp;
+            string str = "";
+
+            //建立1-50的初始陣列
+            for (int i = 0; i < initialArray.Length; i++)
+                initialArray[i] = i + 1;
+
+            //洗牌法，從後往前，產生出一個亂數排列
+            for (int i = initialArray.Length - 1; i >= 0; i--)
+            {
+                //取一個亂數位置，位置限定為i之前
+                int j = rd.Next(i + 1);
+                //先暫時記錄數字
+                temp = initialArray[i];
+                //兩個位置的數交換
+                initialArray[i] = initialArray[j];
+                initialArray[j] = temp;
+            }
+
+            //將前11個數取出，放入shuffledArray
+            //可以使用copy，但這裡還沒學到
+            for (int i = 0; i < shuffledArray.Length; i++)
+                shuffledArray[i] = initialArray[i];
+
+            //顯示初始陣列
+            foreach (int n in shuffledArray)
+                str += n + ", ";
+            textBox1.AppendText("初始：" + str + "\r\n");
+
+            //泡沫排序法
+            //可以使用Array.Sort，但這裡還沒學到
+            for (int i = 0; i < shuffledArray.Length - 1; i++)
+            {
+                for (int j = shuffledArray.Length - 1; j >= i + 1; j --)
+                {
+                    if (shuffledArray[j] < shuffledArray[j - 1])
+                    {
+                        temp = shuffledArray[j];
+                        shuffledArray[j] = shuffledArray[j - 1];
+                        shuffledArray[j - 1] = temp;
+                    }
+                }
+            }
+
+            //顯示排序後的陣列
+            str = "";
+            foreach (int n in shuffledArray)
+                str += n + ", ";
+            textBox1.AppendText("排序：" + str + "\r\n");
+
+            //顯示中間值
+            int middle = (shuffledArray.Length - 1) / 2;
+            textBox1.AppendText("中間值為" + shuffledArray[middle] + "\r\n");
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            textBox1.Clear();
+
+            //可變數字設定
+            int arraySize = 12;
+            int minValue = 30;
+            int maxValue = 120;
+
+            int[] array = new int[arraySize];
+            int temp;
+            string str = "";
+
+            for (int i = 0; i < array.Length; i++)
+                array[i] = rd.Next(minValue, maxValue + 1);
+
+            foreach (int n in array)
+                str += n + ", ";
+            textBox1.AppendText("初始：" + str + "\r\n");
+
+            //選擇排序法
+            for (int i = 0; i < array.Length; i++) //i=0~11
+            {
+                for (int j = i + 1; j < array.Length; j++) //j=1~11
+                {
+                    if (array[i] < array[j]) //如果左邊<右邊
+                    {
+                        temp = array[i];
+                        array[i] = array[j];
+                        array[j] = temp;
+                    }
+                }
+            }
+
+            str = "";
+            foreach (int n in array)
+                str += n + ", ";
+
+            textBox1.AppendText("排序：" + str + "\r\n");
+
+        }
+    }
+}
