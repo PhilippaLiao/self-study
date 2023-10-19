@@ -1,0 +1,176 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+/*
+  說明：直接拿ch6-S10-P1的程式碼來做修改
+  增添題目指定的「刪除」和「清除」按鈕
+  調整所有按鈕的位置
+  額外增加「刪除」到最後會變成「復原」，再按下會重新匯入項目清單
+*/
+namespace Ch6_Exercise_7
+{
+    public partial class Form1 : Form
+    {
+        ListBox list1 = null;
+        ListBox list2 = null;
+        ListBox list3 = null;
+        Label lbl1 = null;
+        Label lbl2 = null;
+        Label lbl3 = null;
+        string[] item = { "鍵盤", "滑鼠", "USB隨身碟", "喇叭", "麥克風", "HDMI對VGA轉接頭" };
+        int[] prices = { 100, 200, 300, 400, 500, 600 };
+        Button btn1 = null;
+        Button btn2 = null;
+        Button btn3 = null; //刪除按鈕
+        Button btn4 = null; //清除按鈕
+        Label totalpriceLabel = null;
+
+        public Form1()
+        {
+            InitializeComponent();
+
+            //項目名稱清單
+            list1 = new ListBox();
+            list1.Location = new Point(25, 75);
+            list1.Size = new Size(170, 120);
+            list1.Items.AddRange(item);
+            list1.SelectedIndex = 0;
+            this.Controls.Add(list1);
+            lbl1 = new Label();
+            lbl1.Location = new Point(list1.Location.X,
+                                      list1.Location.Y - lbl1.Height - 5);
+            lbl1.Text = "項目名稱";
+            this.Controls.Add(lbl1);
+
+            //刪除項目按鈕
+            btn3 = new Button();
+            btn3.Location = new Point(list1.Location.X,
+                                      list1.Location.Y + list1.Height + 20);
+            btn3.AutoSize = true;
+            btn3.Text = "刪除";
+            this.Controls.Add(btn3);
+            btn3.Click += btn3_Click;
+
+            //數量清單
+            list2 = new ListBox();
+            list2.Location = new Point(list1.Location.X + list1.Width + 20, 75);
+            list2.Size = new Size(90, 120);
+            for (int i = 1; i <= 10; i++)
+                list2.Items.Add(i.ToString());
+            list2.SelectedIndex = 0;
+            this.Controls.Add(list2);
+            lbl2 = new Label();
+            lbl2.Location = new Point(list2.Location.X,
+                                      list2.Location.Y - lbl2.Height - 5);
+            lbl2.Text = "數量";
+            this.Controls.Add(lbl2);
+
+            //購買清單
+            list3 = new ListBox();
+            list3.Location = new Point(list2.Location.X + list2.Width + 20, 75);
+            list3.Size = new Size(180, 120);
+            this.Controls.Add(list3);
+            lbl3 = new Label();
+            lbl3.Location = new Point(list3.Location.X,
+                                      list3.Location.Y - lbl3.Height - 5);
+            lbl3.Text = "購買清單";
+            this.Controls.Add(lbl3);
+
+            //加入購買清單按鈕
+            btn1 = new Button();
+            btn1.Location = new Point(btn3.Location.X + btn3.Width + 10,
+                                      btn3.Location.Y);
+            btn1.AutoSize = true;
+            btn1.Text = "加入";
+            this.Controls.Add(btn1);
+            btn1.Click += btn1_Click;
+
+            //清除購買清單按鈕
+            btn4 = new Button();
+            btn4.Location = new Point(list3.Location.X, btn1.Location.Y);
+            btn4.AutoSize = true;
+            btn4.Text = "清除全部";
+            this.Controls.Add(btn4);
+            btn4.Click += btn4_Click;
+
+            //計算金額按鈕
+            btn2 = new Button();
+            btn2.Location = new Point(btn3.Location.X,
+                                      btn3.Location.Y + btn3.Height + 40);
+            btn2.AutoSize = true;
+            btn2.Text = "計算金額";
+            this.Controls.Add(btn2);
+            btn2.Click += btn2_Click;
+
+            //顯示金額標籤
+            totalpriceLabel = new Label();
+            totalpriceLabel.Location = new Point(btn2.Location.X + btn2.Width + 20,
+                                                 btn2.Location.Y + 5);
+            totalpriceLabel.Text = "金額：0";
+            this.Controls.Add(totalpriceLabel);
+        }
+
+        //自訂函數：加入購買清單按鈕的點擊事件
+        private void btn1_Click(object sender, EventArgs e)
+        {
+            string selectedItem = list1.SelectedItem.ToString();
+            string selectedQuantity = list2.SelectedItem.ToString();
+            list3.Items.Add(selectedItem + "x" + selectedQuantity);
+            list3.SelectedIndex = list3.Items.Count - 1; //自動選擇最後一筆資料
+        }
+
+        //自訂函數：計算金額按鈕的點擊事件
+        private void btn2_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                int itemIndex = list1.SelectedIndex;
+                int quantity = Convert.ToInt32(list2.SelectedItem);
+                int price = prices[itemIndex];
+                int totalprice = price * quantity;
+                totalpriceLabel.Text = "金額：" + totalprice;
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("請選擇項目");
+                return;
+            }
+        }
+
+        //自訂函數：刪除項目按鈕的點擊事件
+        private void btn3_Click(object sender, EventArgs e)
+        {
+            int itemIndex = list1.SelectedIndex;
+            int itemCount = list1.Items.Count;
+            if (itemCount > 1)
+            {
+                list1.Items.RemoveAt(itemIndex);
+                list1.SelectedIndex = itemIndex;
+            }
+            else if (itemCount == 1)
+            {
+                btn3.Text = "復原";
+                list1.Items.RemoveAt(itemIndex);
+            }
+            else
+            {
+                list1.Items.AddRange(item);
+                list1.SelectedIndex = 0;
+                btn3.Text = "刪除";
+            }
+        }
+
+        //自訂函數：清除購買清單按鈕的點擊事件
+        private void btn4_Click(object sender, EventArgs e)
+        {
+            list3.Items.Clear();
+        }
+    }
+}
