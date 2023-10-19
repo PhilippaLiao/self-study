@@ -1,0 +1,67 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace ch5_S3_P1
+{
+    public partial class Form1 : Form
+    {
+        int score = 0;
+        Random rd;
+
+        public Form1()
+        {
+            InitializeComponent();
+
+            rd = new Random();
+        }
+
+        private void ovalShape1_Click(object sender, EventArgs e)
+        {
+            score += 5;
+        }
+
+        private void ovalShape2_Click(object sender, EventArgs e)
+        {
+            score -= 10;
+        }
+
+        private void rectangleShape1_Click(object sender, EventArgs e)
+        {
+            score += 5;
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            //圖形大小及位置的相關數值
+            int min = 30;
+            int max = 121;
+            int x = this.ClientSize.Width;
+            int y = this.ClientSize.Height;
+
+            //圖形大小
+            ovalShape1.Width = rd.Next(min, max);
+            ovalShape1.Height = ovalShape1.Width;
+            ovalShape2.Width = rd.Next(min, max);
+            ovalShape2.Height = ovalShape2.Width * 2;
+            rectangleShape1.Width = rd.Next(min, max);
+            rectangleShape1.Height = rectangleShape1.Width;
+
+            //圖形位置
+            ovalShape1.Left = rd.Next(x - ovalShape1.Width);
+            ovalShape1.Top = rd.Next(y - ovalShape1.Height);
+            ovalShape2.Left = rd.Next(x - ovalShape2.Width);
+            ovalShape2.Top = rd.Next(Math.Max(0, y - ovalShape2.Height));
+            rectangleShape1.Left = rd.Next(x - rectangleShape1.Width);
+            rectangleShape1.Top = rd.Next(y - rectangleShape1.Height);
+
+            label1.Text = Convert.ToString(score); //顯示分數
+        }
+    }
+}
