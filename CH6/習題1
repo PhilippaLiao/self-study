@@ -1,0 +1,224 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace Ch6_Exercise_1
+{
+    public partial class Form1 : Form
+    {
+        //建立二維陣列（學號,成績,名次）
+        int[,] array = new int[5, 3] { {30301, 0, 0}, {30302, 0, 0},
+                                       {30303, 0, 0}, {30304, 0, 0},
+                                       {30305, 0, 0} };
+        bool fgOK = true; //檢查輸入成績是否正確
+
+        int[] temp = new int[5]; //暫時陣列，用於排序成績
+
+        public Form1()
+        {
+            InitializeComponent();
+
+            //dataGridView基礎設定
+            for (int i = 0; i < 5; i++)
+            {
+                dataGridView1.Rows.Add();
+                dataGridView1.Rows[i].Height = 25;
+            }
+            for (int i = 0; i < 3; i++)
+            {
+                dataGridView1.Columns[i].Width = 100;
+            }
+            dataGridView1.Width = dataGridView1.Columns[0].Width * 4;
+            dataGridView1.Height = dataGridView1.Rows[0].Height * 6;
+
+            //匯入學號至表頭
+            for (int i = 0; i < 5; i++)
+                dataGridView1.Rows[i].Cells[0].Value = array[i, 0].ToString();
+        }
+
+        //======================第一頁：輸入成績======================
+        //檢查成績輸入欄：只能按數字鍵&控制鍵
+        private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (Char.IsDigit(e.KeyChar) || Char.IsControl(e.KeyChar))
+                e.Handled = false;
+            else e.Handled = true;
+        }
+        private void textBox2_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (Char.IsDigit(e.KeyChar) || Char.IsControl(e.KeyChar))
+                e.Handled = false;
+            else e.Handled = true;
+        }
+        private void textBox3_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (Char.IsDigit(e.KeyChar) || Char.IsControl(e.KeyChar))
+                e.Handled = false;
+            else e.Handled = true;
+        }
+        private void textBox4_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (Char.IsDigit(e.KeyChar) || Char.IsControl(e.KeyChar))
+                e.Handled = false;
+            else e.Handled = true;
+        }
+        private void textBox5_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (Char.IsDigit(e.KeyChar) || Char.IsControl(e.KeyChar))
+                e.Handled = false;
+            else e.Handled = true;
+        }
+
+        ////檢查成績輸入欄：數字
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                array[0, 1] = Convert.ToInt32(textBox1.Text);
+                fgOK = true;
+            }
+            catch (Exception)
+            {
+                fgOK = false;
+                MessageBox.Show("輸入錯誤");
+            }
+        }
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                array[1, 1] = Convert.ToInt32(textBox2.Text);
+                fgOK = true;
+            }
+            catch (Exception)
+            {
+                fgOK = false;
+                MessageBox.Show("輸入錯誤");
+            }
+        }
+        private void textBox3_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                array[2, 1] = Convert.ToInt32(textBox3.Text);
+                fgOK = true;
+            }
+            catch (Exception)
+            {
+                fgOK = false;
+                MessageBox.Show("輸入錯誤");
+            }
+        }
+        private void textBox4_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                array[3, 1] = Convert.ToInt32(textBox4.Text);
+                fgOK = true;
+            }
+            catch (Exception)
+            {
+                fgOK = false;
+                MessageBox.Show("輸入錯誤");
+            }
+        }
+        private void textBox5_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                array[4, 1] = Convert.ToInt32(textBox5.Text);
+                fgOK = true;
+            }
+            catch (Exception)
+            {
+                fgOK = false;
+                MessageBox.Show("輸入錯誤");
+            }
+        }
+
+        //=================第二頁：以學號查詢成績====================
+        private void button1_Click(object sender, EventArgs e)
+        {
+            String input = textBox6.Text;
+            bool found = false; //判定是否找到學號
+
+            for (int i = 0; i < 5; i++)
+            {
+                if (array[i, 0].ToString() == input)
+                {
+                    label7.Text = "成績：" + array[i, 1].ToString() + "分";
+                    found = true;
+                    break;
+                }
+            }
+            if (!found)
+            {
+                label7.Text = "查無此學號";
+                textBox6.Clear();
+            }
+        }
+
+        //=================第三頁：顯示成績、排名、總平均====================
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (tabControl1.SelectedTab == tabPage3) //當點擊至第三頁
+            {
+                //檢查所有成績是否正確
+                if (fgOK == false)
+                    return;
+
+                //將成績匯入dataGridView
+                for (int i = 0; i < 5; i++)
+                {
+                    dataGridView1.Rows[i].Cells[1].Value = array[i, 1];
+
+                    //不及格的成績顯示紅色
+                    if (array[i, 1] < 60)
+                        dataGridView1.Rows[i].Cells[1].Style.ForeColor = Color.Red;
+                    else
+                        dataGridView1.Rows[i].Cells[1].Style.ForeColor = Color.Black;
+                }
+                    
+                //將成績欄複製到temp陣列，進行排列
+                for (int i = 0; i < 5; i++)
+                    temp[i] = array[i, 1];
+                Array.Sort(temp); //遞增排序
+
+                //根據temp排序的成績高低，賦予array排名的值
+                int rank = 1;
+                for (int i = temp.Length - 1; i >= 0; i--)  //i=4~0
+                {
+                    for (int j = 0; j < 5; j++)
+                    {
+                        if (array[j, 1] == temp[i]) //temp最右邊的元素=最大的數字
+                        {
+                            array[j, 2] = rank;
+                            if (i > 0 && temp[i - 1] != temp[i]) //如果分數不同
+                            {
+                                rank++;
+                                break;  //重要！確保排名每次只增加一次
+                            }
+                        }
+                    }
+                }
+
+                //將排名匯入dataGridView
+                for (int i = 0; i < 5; i++)
+                    dataGridView1.Rows[i].Cells[2].Value = array[i, 2];
+
+                //計算總平均
+                Single avg = 0;
+                for (int i = 0; i < 5; i++)
+                    avg += array[i, 1];
+                avg /= 5.0f;
+                label8.Text = "總平均：" + avg.ToString() + "分";
+            }
+        }
+    }
+}
