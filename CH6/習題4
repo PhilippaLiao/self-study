@@ -1,0 +1,62 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace Ch6_Exercise_4
+{
+    public partial class Form1 : Form
+    {
+        int[] array = new int[10] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            String str;
+
+            //=====================步驟A=====================
+            Array.Resize(ref array, 15);
+            int length = array.Length;
+
+            //從array陣列位置5開始，複製到array的位置10，5個元素
+            Array.Copy(array, 5, array, 10, 5);
+
+            textBox1.AppendText("A.容量增加為15，將元素值6,7,8,9,10移到最後五個位置：\r\n");
+            str = "";
+            foreach (int item in array)
+                str += item + ", ";
+            textBox1.AppendText(str + "\r\n");
+            textBox1.AppendText("======================\r\n");
+
+            //=====================步驟B=====================
+            int[] insertArray = { 11, 12, 13, 14, 15 };
+            
+            //從insrtArray陣列位置0開始，複製到array的位置5，5個元素
+            Array.Copy(insertArray, 0, array, 5, 5);
+
+            textBox1.AppendText("B.在陣列位置5-9，填入11,12,13,14,15：\r\n");
+            str = "";
+            foreach (int item in array)
+                str += item + ", ";
+            textBox1.AppendText(str + "\r\n");
+            textBox1.AppendText("======================\r\n");
+
+            //=====================步驟C=====================
+            Array.Reverse(array, 4, 7);
+            textBox1.AppendText("C.將陣列位置4開始的7個元素做倒置：\r\n");
+            str = "";
+            foreach (int item in array)
+                str += item + ", ";
+            textBox1.AppendText(str + "\r\n");
+        }
+    }
+}
