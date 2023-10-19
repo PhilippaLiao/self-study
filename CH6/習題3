@@ -1,0 +1,62 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace Ch6_Exercise_3
+{
+    public partial class Form1 : Form
+    {
+        String str;
+        int[] array = { 13, 5, 21, 45, 23, 12, 45, 29, 21, 40 };
+        int input;
+
+        public Form1()
+        {
+            InitializeComponent();
+
+            str = "整數陣列：13, 5, 21, 45, 23, 12, 45, 29, 21, 40";
+            label2.Text = str;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (!int.TryParse(textBox1.Text, out input))
+            {
+                label2.Text = "請輸入數字！";
+                label2.ForeColor = Color.Red;
+                return;
+            }
+
+            bool found = false;
+            for (int i = 0; i < array.Length; i++)
+            {
+                if (array[i] == input)
+                {
+                    for (int j = i; j < array.Length - 1; j++)
+                        array[j] = array[j + 1];
+                    Array.Resize(ref array, array.Length - 1);
+                    i--; //退1位重新檢查
+                    found = true;
+                }
+            }
+
+            if (!found)
+            {
+                label2.Text = "沒有此數字";
+                return;
+            }
+
+            str = "整數陣列：";
+            foreach (int item in array)
+                str += item + ", ";
+            label2.Text = str;
+            label2.ForeColor = Color.Black;
+        }
+    }
+}
